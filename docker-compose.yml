@@ -1,0 +1,64 @@
+# Nilai ${...} di bawah diambil dari .env.production, BUKAN dari .env:
+#   docker compose --env-file .env.production up -d --build
+# (.env dipakai untuk dev lokal dan skema variabelnya berbeda — lihat
+#  .env.production.example.)
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?wajib diisi di .env.production}
+      MARIADB_DATABASE: ${DB_NAME:-alumni_db}
+      MARIADB_USER: ${DB_USER:-alumni}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?wajib diisi di .env.production}
+    command:
+      # Dataset sekarang ~2000 baris; 256M sudah jauh lebih besar dari total data
+      # dan aman untuk VPS 2GB.
+      - --innodb-buffer-pool-size=256M
+      - --max-connections=60
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+      # Hanya dieksekusi saat volume db_data masih kosong (boot pertama).
+      # Dump ini tidak punya CREATE DATABASE/USE, dan itu tidak masalah: entrypoint
+      # MariaDB menjalankannya dengan --database=$MARIADB_DATABASE.
+      - ./alumni_db.sql:/docker-entrypoint-initdb.d/01-alumni_db.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        # init_admin() konek ke DB saat import. Tanpa gate ini dia gagal diam-diam
+        # (sudah ada try/except) dan admin tidak pernah terbuat.
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?wajib diisi di .env.production}
+      MYSQL_HOST: db
+      MYSQL_USER: ${DB_USER:-alumni}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?wajib diisi di .env.production}
+      MYSQL_DB: ${DB_NAME:-alumni_db}
+      MAX_CONTENT_LENGTH: ${MAX_CONTENT_LENGTH:-5242880}
+    volumes:
+      # Bind mount, bukan named volume, supaya foto gampang di-backup/scp dari host.
+      - ./data/uploads:/app/app/static/uploads
+    ports:
+      # WAJIB pakai 127.0.0.1. Kalau ditulis "5005:5005" saja, Docker menulis aturan
+      # iptables sendiri yang menembus ufw dan port ini terbuka ke internet.
+      - "127.0.0.1:5005:5005"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:5005/admin/login"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  db_data:

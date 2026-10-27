@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+# Berisi kredensial produksi. Templatnya (.env.production.example) tetap ikut Git.
+.env.production
+venv/
+*.db
+app/static/uploads/
+
+# Bind mount upload di server (Docker)
+data/
+
+# Dump berisi data pribadi 1966 alumni — kirim via scp, jangan di-commit.
+alumni_db.sql
+*.xlsx

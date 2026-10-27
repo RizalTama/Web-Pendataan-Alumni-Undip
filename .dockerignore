@@ -1,0 +1,26 @@
+.git/
+.gitignore
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Rahasia: env di container di-inject lewat docker-compose, bukan lewat file.
+.env
+.env.*
+
+# Data & upload hidup di volume/bind mount, jangan dibekukan ke dalam image.
+alumni_db.sql
+app/static/uploads/
+data/
+
+# Berkas kerja yang tidak dipakai aplikasi.
+*.xlsx
+.DS_Store
+**/.DS_Store
+.claude/
+penjelasan.md
+berita.html
+logo.PNG
+slider/
+Procfile

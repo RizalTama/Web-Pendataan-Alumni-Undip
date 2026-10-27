@@ -1,0 +1,51 @@
+CREATE DATABASE IF NOT EXISTS alumni_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE alumni_db;
+
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100),
+    nama_lengkap VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS alumni (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(150) NOT NULL,
+    angkatan YEAR NOT NULL,
+    jurusan VARCHAR(100) NOT NULL,
+    foto VARCHAR(255) DEFAULT NULL,
+    pekerjaan VARCHAR(150),
+    perusahaan VARCHAR(150),
+    kota_domisili VARCHAR(100),
+    email VARCHAR(100),
+    linkedin VARCHAR(255),
+    bio TEXT,
+    is_unggulan TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS berita (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    konten LONGTEXT NOT NULL,
+    thumbnail VARCHAR(255),
+    kategori ENUM('berita','pengumuman') DEFAULT 'berita',
+    status ENUM('draft','published') DEFAULT 'draft',
+    admin_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS galeri (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    deskripsi TEXT,
+    foto VARCHAR(255) NOT NULL,
+    tanggal_kegiatan DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

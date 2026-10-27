@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PosBerita Dashboard Modern</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+:root{
+    --pink:#ffd6ea;
+    --pink2:#ffc2de;
+    --purple:#d7c3ff;
+    --purple2:#a97fff;
+    --dark:#6d28d9;
+    --text:#444;
+}
+
+body{
+    background:#ffe6f2;
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* LOGIN */
+
+.login-screen{
+    position:fixed;
+    inset:0;
+    background:#f7cfe6;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.login-card{
+    width:400px;
+    background:white;
+    border-radius:35px;
+    padding:40px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.1);
+}
+
+.login-card h1{
+    text-align:center;
+    color:var(--dark);
+    margin-bottom:10px;
+    font-size:38px;
+}
+
+.login-card p{
+    text-align:center;
+    color:#888;
+    margin-bottom:30px;
+}
+
+.input-group{
+    position:relative;
+    margin-bottom:18px;
+}
+
+.input-group input{
+    width:100%;
+    padding:15px;
+    border:none;
+    background:#f5f5f5;
+    border-radius:16px;
+    outline:none;
+    font-size:15px;
+}
+
+.password-toggle{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#777;
+}
+
+.login-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    background:var(--purple2);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.forgot{
+    text-align:right;
+    margin-top:10px;
+}
+
+.forgot a{
+    color:var(--dark);
+    text-decoration:none;
+    font-size:14px;
+}
+
+/* APP */
+
+.app{
+    display:none;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:280px;
+    background:#efcffd;
+    position:fixed;
+    height:100vh;
+    padding:30px 20px;
+    overflow-y:auto;
+    box-shadow:5px 0 20px rgba(0,0,0,0.05);
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:25px;
+    object-fit:cover;
+}
+
+.profile h2{
+    color:var(--dark);
+    margin-top:15px;
+}
+
+.profile p{
+    color:#777;
+    font-size:14px;
+}
+
+.menu-title{
+    font-size:12px;
+    font-weight:700;
+    color:#999;
+    margin-bottom:15px;
+    margin-top:20px;
+    text-transform:uppercase;
+}
+
+.menu button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    margin-bottom:12px;
+    background:white;
+    cursor:pointer;
+    text-align:left;
+    font-size:15px;
+    transition:0.3s;
+    color:#555;
+    display:flex;
+    align-items:center;
+}
+
+.menu button i{
+    margin-right:12px;
+    color:var(--dark);
+}
+
+.menu button:hover,
+.menu button.active{
+    background:var(--purple2);
+    color:white;
+}
+
+.menu button:hover i,
+.menu button.active i{
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:280px;
+    padding:35px;
+}
+
+.header h1{
+    font-size:42px;
+    color:var(--dark);
+}
+
+.header p{
+    color:#666;
+    margin-top:10px;
+}
+
+/* SEARCH */
+
+.search-box{
+    margin-top:25px;
+    background:white;
+    border-radius:20px;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+}
+
+.search-box i{
+    color:var(--dark);
+    margin-right:10px;
+}
+
+.search-box input{
+    width:100%;
+    border:none;
+    outline:none;
+    font-size:15px;
+}
+
+/* GRID */
+
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+    margin-top:35px;
+}
+
+/* CARD */
+
+.news-card{
+    background:white;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    cursor:pointer;
+    transition:0.3s;
+    position:relative;
+}
+
+.news-card:hover{
+    transform:translateY(-5px);
+}
+
+.card-img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-body{
+    padding:22px;
+}
+
+.tag{
+    display:inline-block;
+    padding:7px 15px;
+    border-radius:20px;
+    background:#f0dcff;
+    color:var(--dark);
+    font-size:12px;
+    font-weight:600;
+}
+
+.card-body h3{
+    margin-top:15px;
+    font-size:23px;
+    line-height:1.4;
+    color:#222;
+}
+
+.card-body p{
+    margin-top:12px;
+    color:#666;
+    line-height:1.8;
+    font-size:14px;
+}
+
+/* ACTION */
+
+.card-actions{
+    position:absolute;
+    top:15px;
+    right:15px;
+    display:flex;
+    gap:10px;
+    opacity:0;
+    transition:0.3s;
+}
+
+.news-card:hover .card-actions{
+    opacity:1;
+}
+
+.action-btn{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    color:var(--dark);
+    cursor:pointer;
+    font-size:15px;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    padding:20px;
+}
+
+.modal-content{
+    width:100%;
+    max-width:700px;
+    max-height:90vh;
+    background:white;
+    border-radius:30px;
+    overflow:hidden;
+    position:relative;
+}
+
+.modal-scroll{
+    overflow-y:auto;
+    max-height:90vh;
+    padding:35px;
+}
+
+.close-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+    z-index:10;
+    font-size:16px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:15px;
+    border:none;
+    background:#f5f5f5;
+    border-radius:16px;
+    outline:none;
+    font-size:15px;
+}
+
+.upload-box{
+    border:3px dashed var(--purple);
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    background:#faf5ff;
+}
+
+.preview{
+    width:100%;
+    height:220px;
+    margin-top:15px;
+    border-radius:20px;
+    overflow:hidden;
+    display:none;
+}
+
+.preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.save-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    background:var(--purple2);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* DETAIL */
+
+.detail-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+    padding:20px;
+}
+
+.detail-content{
+    width:900px;
+    max-height:90vh;
+    overflow:hidden;
+    background:white;
+    border-radius:35px;
+    position:relative;
+}
+
+.detail-scroll{
+    overflow-y:auto;
+    max-height:90vh;
+}
+
+.detail-image{
+    width:100%;
+    height:380px;
+    object-fit:cover;
+}
+
+.detail-body{
+    padding:40px;
+}
+
+.detail-body h1{
+    margin-top:20px;
+    font-size:40px;
+    line-height:1.4;
+    color:#222;
+}
+
+.detail-body p{
+    margin-top:25px;
+    line-height:2;
+    color:#555;
+    font-size:16px;
+    white-space:pre-line;
+}
+
+body.modal-open{
+    overflow:hidden;
+}
+
+@media(max-width:1000px){
+
+    .news-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .news-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login-screen" id="loginScreen">
+
+    <div class="login-card">
+
+        <h1>PosBerita</h1>
+
+        <p>Login Dashboard Admin</p>
+
+        <div class="input-group">
+            <input type="text"
+            id="username"
+            placeholder="Username">
+        </div>
+
+        <div class="input-group">
+
+            <input type="password"
+            id="password"
+            placeholder="Password">
+
+            <i class="fas fa-eye password-toggle"
+            onclick="togglePassword()"></i>
+
+        </div>
+
+        <button class="login-btn"
+        onclick="login()">
+        Masuk Dashboard
+        </button>
+
+        <div class="forgot">
+            <a href="#"
+            onclick="forgotPassword()">
+            Lupa Password?
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- APP -->
+
+<div class="app" id="app">
+
+    <aside class="sidebar">
+
+        <div class="profile">
+
+            <img src="https://i.pravatar.cc/150?img=32">
+
+            <h2>Admin Kece</h2>
+
+            <p>Portal Berita Modern</p>
+
+        </div>
+
+        <div class="menu-title">
+            Menu Utama
+        </div>
+
+        <div class="menu">
+
+            <button class="active"
+            onclick="showAll()">
+            <i class="fas fa-th-large"></i>
+            Dashboard
+            </button>
+
+            <button onclick="openModal()">
+            <i class="fas fa-plus-circle"></i>
+            Tambah Berita
+            </button>
+
+            <button onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+            </button>
+
+        </div>
+
+        <div class="menu-title">
+            Kategori
+        </div>
+
+        <div class="menu">
+
+            <button onclick="filterNews('Semua')">
+            <i class="fas fa-globe"></i>
+            Semua Berita
+            </button>
+
+            <button onclick="filterNews('Lifestyle')">
+            <i class="fas fa-heart"></i>
+            Lifestyle
+            </button>
+
+            <button onclick="filterNews('Teknologi')">
+            <i class="fas fa-microchip"></i>
+            Teknologi
+            </button>
+
+            <button onclick="filterNews('Nasional')">
+            <i class="fas fa-landmark"></i>
+            Nasional
+            </button>
+
+            <button onclick="filterNews('Politik')">
+            <i class="fas fa-scale-balanced"></i>
+            Politik
+            </button>
+
+            <button onclick="filterNews('Kesehatan')">
+            <i class="fas fa-leaf"></i>
+            Kesehatan
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="header">
+
+            <h1>Dashboard Berita</h1>
+
+            <p>
+            Kelola berita modern dengan tampilan pink ungu aesthetic
+            </p>
+
+        </div>
+
+        <div class="search-box">
+
+            <i class="fas fa-search"></i>
+
+            <input type="text"
+            id="searchInput"
+            placeholder="Cari berita..."
+            onkeyup="searchNews()">
+
+        </div>
+
+        <div class="news-grid"
+        id="newsContainer">
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal"
+id="modal">
+
+    <div class="modal-content">
+
+        <button class="close-btn"
+        onclick="closeModal()">
+        <i class="fas fa-times"></i>
+        </button>
+
+        <div class="modal-scroll">
+
+            <h2 style="color:var(--dark); margin-bottom:25px;">
+            Tambah / Edit Berita
+            </h2>
+
+            <div class="form-group">
+
+                <label>Judul Berita</label>
+
+                <input type="text"
+                id="title">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Kategori</label>
+
+                <select id="category">
+
+                    <option>Lifestyle</option>
+                    <option>Teknologi</option>
+                    <option>Nasional</option>
+                    <option>Politik</option>
+                    <option>Kesehatan</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Upload Gambar</label>
+
+                <div class="upload-box">
+
+                    <input type="file"
+                    id="imageInput"
+                    accept="image/*"
+                    onchange="previewImage(event)">
+
+                </div>
+
+                <div class="preview"
+                id="previewBox">
+
+                    <img id="previewImg">
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Isi Berita</label>
+
+                <textarea
+                rows="12"
+                id="description"
+                placeholder="Tulis isi berita panjang di sini..."
+                ></textarea>
+
+            </div>
+
+            <button class="save-btn"
+            onclick="saveNews()">
+            Simpan Berita
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- DETAIL -->
+
+<div class="detail-modal"
+id="detailModal">
+
+    <div class="detail-content">
+
+        <button class="close-btn"
+        onclick="closeDetail()">
+        <i class="fas fa-times"></i>
+        </button>
+
+        <div class="detail-scroll">
+
+            <img id="detailImage"
+            class="detail-image">
+
+            <div class="detail-body">
+
+                <span class="tag"
+                id="detailCategory"></span>
+
+                <h1 id="detailTitle"></h1>
+
+                <p id="detailDescription"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let editIndex = null;
+
+let newsData = [
+
+{
+title:"Tren Gaya Hidup Minimalis Semakin Digemari Anak Muda Tahun 2026",
+category:"Lifestyle",
+image:"https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200",
+description:`Gaya hidup minimalis kini semakin populer di kalangan anak muda Indonesia. Banyak orang mulai mengurangi barang yang tidak diperlukan dan fokus pada kehidupan yang lebih sederhana serta nyaman.
+
+Fenomena ini muncul karena meningkatnya kesadaran masyarakat terhadap kesehatan mental dan pentingnya hidup yang tidak terlalu konsumtif.
+
+Selain itu, media sosial juga menjadi salah satu faktor utama berkembangnya tren minimalis modern. Banyak konten kreator membagikan inspirasi kamar aesthetic, meja kerja bersih, hingga pola hidup produktif yang membuat masyarakat tertarik menerapkannya.
+
+Para ahli menyebutkan bahwa hidup minimalis mampu membantu seseorang mengurangi stres dan meningkatkan fokus dalam menjalani aktivitas sehari-hari.`
+},
+
+{
+title:"Teknologi AI Baru Diklaim Mampu Membantu Aktivitas Mahasiswa",
+category:"Teknologi",
+image:"https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200",
+description:`Perkembangan teknologi kecerdasan buatan atau Artificial Intelligence semakin berkembang pesat pada tahun 2026.
+
+Kini berbagai platform AI mulai digunakan mahasiswa untuk membantu proses pembelajaran, pencarian referensi, hingga penyusunan tugas akademik.
+
+Beberapa kampus bahkan mulai mengintegrasikan teknologi AI ke dalam sistem pembelajaran digital mereka.
+
+Meski begitu, banyak pihak tetap mengingatkan agar penggunaan AI dilakukan secara bijak dan tidak dijadikan alat untuk melakukan plagiarisme atau pelanggaran akademik lainnya.`
+},
+
+{
+title:"Pemerintah Resmi Umumkan Program Nasional Digitalisasi Sekolah",
+category:"Nasional",
+image:"https://images.unsplash.com/photo-1523050853051-be991f85e626?w=1200",
+description:`Pemerintah Indonesia resmi meluncurkan program digitalisasi sekolah yang akan diterapkan di berbagai daerah mulai tahun ini.
+
+Program tersebut bertujuan meningkatkan kualitas pendidikan berbasis teknologi dan memperluas akses internet di lingkungan sekolah.
+
+Selain pembangunan infrastruktur digital, pemerintah juga akan memberikan pelatihan teknologi kepada guru dan tenaga pengajar agar mampu mengikuti perkembangan zaman.
+
+Masyarakat menyambut baik program ini karena dianggap dapat membantu pemerataan pendidikan di Indonesia.`
+},
+
+{
+title:"Dunia Politik Indonesia Memanas Menjelang Pemilu 2026",
+category:"Politik",
+image:"https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1200",
+description:`Situasi politik nasional mulai memanas menjelang pemilu tahun 2026. Berbagai partai mulai melakukan persiapan strategi politik dan konsolidasi internal untuk menghadapi persaingan mendatang.
+
+Beberapa pengamat menilai bahwa media sosial akan menjadi salah satu faktor utama dalam mempengaruhi opini publik selama masa kampanye berlangsung.
+
+Selain itu, masyarakat juga diimbau untuk lebih bijak dalam menerima informasi politik agar tidak mudah terpengaruh berita palsu atau hoaks yang beredar di internet.`
+},
+
+{
+title:"Penelitian Baru Ungkap Pentingnya Tidur Cukup Bagi Kesehatan",
+category:"Kesehatan",
+image:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200",
+description:`Penelitian terbaru menunjukkan bahwa kualitas tidur memiliki pengaruh besar terhadap kesehatan fisik maupun mental seseorang.
+
+Kurang tidur dalam jangka panjang dapat meningkatkan risiko berbagai penyakit seperti tekanan darah tinggi, stres, hingga gangguan konsentrasi.
+
+Para ahli kesehatan menyarankan agar masyarakat mulai memperbaiki pola tidur dan mengurangi penggunaan gadget sebelum tidur agar kualitas istirahat menjadi lebih baik.`
+},
+
+{
+title:"Festival Musik Nasional 2026 Dipadati Ribuan Penonton",
+category:"Nasional",
+image:"https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200",
+description:`Festival musik terbesar tahun 2026 berhasil menarik perhatian ribuan penonton dari berbagai daerah di Indonesia.
+
+Acara tersebut menghadirkan banyak musisi terkenal serta konsep panggung modern yang spektakuler.
+
+Selain menjadi hiburan masyarakat, festival ini juga dianggap mampu meningkatkan sektor ekonomi kreatif dan pariwisata daerah setempat.`
+}
+
+];
+
+function login(){
+
+    let username =
+    document.getElementById("username").value;
+
+    let password =
+    document.getElementById("password").value;
+
+    if(username === "admin" && password === "admin123"){
+
+        document.getElementById("loginScreen")
+        .style.display = "none";
+
+        document.getElementById("app")
+        .style.display = "block";
+
+        renderNews();
+
+    }else{
+
+        alert("Username : admin | Password : admin123");
+
+    }
+
+}
+
+function logout(){
+
+    location.reload();
+
+}
+
+function togglePassword(){
+
+    let input =
+    document.getElementById("password");
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+    }else{
+
+        input.type = "password";
+
+    }
+
+}
+
+function forgotPassword(){
+
+    alert(
+    "Username : admin\nPassword : admin123"
+    );
+
+}
+
+function renderNews(data = newsData){
+
+    let container =
+    document.getElementById("newsContainer");
+
+    container.innerHTML = "";
+
+    data.forEach((news)=>{
+
+        let originalIndex =
+        newsData.indexOf(news);
+
+        container.innerHTML += `
+
+        <div class="news-card"
+        onclick="openDetail(${originalIndex})">
+
+            <div class="card-actions">
+
+                <button class="action-btn"
+                onclick="event.stopPropagation(); editNews(${originalIndex})">
+
+                <i class="fas fa-pen"></i>
+
+                </button>
+
+                <button class="action-btn"
+                onclick="event.stopPropagation(); deleteNews(${originalIndex})">
+
+                <i class="fas fa-trash"></i>
+
+                </button>
+
+            </div>
+
+            <img src="${news.image}"
+            class="card-img">
+
+            <div class="card-body">
+
+                <span class="tag">
+                ${news.category}
+                </span>
+
+                <h3>
+                ${news.title}
+                </h3>
+
+                <p>
+                ${news.description.substring(0,150)}...
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function searchNews(){
+
+    let keyword =
+    document.getElementById("searchInput")
+    .value
+    .toLowerCase()
+    .trim();
+
+    if(keyword === ""){
+
+        renderNews(newsData);
+        return;
+
+    }
+
+    let filtered = newsData.filter(news => {
+
+        return (
+            news.title.toLowerCase().includes(keyword)
+            ||
+            news.category.toLowerCase().includes(keyword)
+            ||
+            news.description.toLowerCase().includes(keyword)
+        );
+
+    });
+
+    renderNews(filtered);
+
+}
+
+function filterNews(category){
+
+    if(category === "Semua"){
+
+        renderNews();
+        return;
+
+    }
+
+    let filtered =
+    newsData.filter(news =>
+    news.category === category);
+
+    renderNews(filtered);
+
+}
+
+function showAll(){
+
+    renderNews();
+
+}
+
+function openModal(){
+
+    editIndex = null;
+
+    document.getElementById("modal")
+    .style.display = "flex";
+
+    document.body.classList.add("modal-open");
+
+    document.getElementById("title").value = "";
+
+    document.getElementById("category").selectedIndex = 0;
+
+    document.getElementById("description").value = "";
+
+    document.getElementById("imageInput").value = "";
+
+    document.getElementById("previewBox")
+    .style.display = "none";
+
+}
+
+function closeModal(){
+
+    document.getElementById("modal")
+    .style.display = "none";
+
+    document.body.classList.remove("modal-open");
+
+}
+
+function previewImage(event){
+
+    let file = event.target.files[0];
+
+    if(file){
+
+        let url =
+        URL.createObjectURL(file);
+
+        document.getElementById("previewBox")
+        .style.display = "block";
+
+        document.getElementById("previewImg")
+        .src = url;
+
+    }
+
+}
+
+function saveNews(){
+
+    let title =
+    document.getElementById("title").value;
+
+    let category =
+    document.getElementById("category").value;
+
+    let description =
+    document.getElementById("description").value;
+
+    let imageInput =
+    document.getElementById("imageInput");
+
+    if(title === "" || description === ""){
+
+        alert("Isi data lengkap dulu!");
+
+        return;
+
+    }
+
+    let imageURL =
+    "https://images.unsplash.com/photo-1504711432869-efd597cdd04d?w=1200";
+
+    if(imageInput.files[0]){
+
+        imageURL =
+        URL.createObjectURL(
+        imageInput.files[0]
+        );
+
+    }
+
+    if(editIndex !== null){
+
+        newsData[editIndex] = {
+
+            ...newsData[editIndex],
+
+            title,
+            category,
+            description,
+
+            image:
+            imageInput.files[0]
+            ? imageURL
+            : newsData[editIndex].image
+
+        };
+
+    }else{
+
+        newsData.unshift({
+
+            title,
+            category,
+            image:imageURL,
+            description
+
+        });
+
+    }
+
+    renderNews();
+
+    closeModal();
+
+    document.getElementById("title").value = "";
+
+    document.getElementById("description").value = "";
+
+    document.getElementById("imageInput").value = "";
+
+    document.getElementById("previewBox")
+    .style.display = "none";
+
+    editIndex = null;
+
+}
+
+function deleteNews(index){
+
+    newsData.splice(index,1);
+
+    renderNews();
+
+}
+
+function editNews(index){
+
+    editIndex = index;
+
+    document.getElementById("modal")
+    .style.display = "flex";
+
+    document.body.classList.add("modal-open");
+
+    document.getElementById("title")
+    .value = newsData[index].title;
+
+    document.getElementById("category")
+    .value = newsData[index].category;
+
+    document.getElementById("description")
+    .value = newsData[index].description;
+
+    document.getElementById("previewBox")
+    .style.display = "block";
+
+    document.getElementById("previewImg")
+    .src = newsData[index].image;
+
+}
+
+function openDetail(index){
+
+    document.getElementById("detailModal")
+    .style.display = "flex";
+
+    document.body.classList.add("modal-open");
+
+    document.getElementById("detailImage")
+    .src = newsData[index].image;
+
+    document.getElementById("detailTitle")
+    .innerText = newsData[index].title;
+
+    document.getElementById("detailCategory")
+    .innerText = newsData[index].category;
+
+    document.getElementById("detailDescription")
+    .innerText = newsData[index].description;
+
+}
+
+function closeDetail(){
+
+    document.getElementById("detailModal")
+    .style.display = "none";
+
+    document.body.classList.remove("modal-open");
+
+}
+
+</script>
+
+</body>
+</html>

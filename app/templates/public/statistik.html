@@ -1,0 +1,87 @@
+{% extends 'public/base.html' %}
+{% block title %}Statistik Alumni — IKA FIB UNDIP{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Statistik Alumni</h1>
+        <p class="text-gray-500 mt-1">Visualisasi data alumni secara keseluruhan</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart 1: Alumni per angkatan -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="font-semibold text-gray-800 mb-1">Alumni per Angkatan</h2>
+            <p class="text-xs text-gray-400 mb-4">Distribusi jumlah alumni berdasarkan tahun angkatan</p>
+            <canvas id="chartAngkatan" height="220"></canvas>
+        </div>
+
+        <!-- Chart 2: Per jurusan (doughnut) -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="font-semibold text-gray-800 mb-1">Distribusi per Jurusan</h2>
+            <p class="text-xs text-gray-400 mb-4">Proporsi alumni dari setiap jurusan</p>
+            <canvas id="chartJurusan" height="220"></canvas>
+        </div>
+
+        <!-- Chart 3: Top 10 pekerjaan -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="font-semibold text-gray-800 mb-1">Top 10 Bidang Pekerjaan</h2>
+            <p class="text-xs text-gray-400 mb-4">Bidang pekerjaan yang paling banyak digeluti alumni</p>
+            <canvas id="chartPekerjaan" height="280"></canvas>
+        </div>
+
+        <!-- Chart 4: Top 10 kota -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="font-semibold text-gray-800 mb-1">Top 10 Kota Domisili</h2>
+            <p class="text-xs text-gray-400 mb-4">Sebaran domisili alumni di berbagai kota</p>
+            <canvas id="chartKota" height="280"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const colors = ['#3B82F6','#8B5CF6','#10B981','#F59E0B','#EF4444','#06B6D4','#EC4899','#84CC16','#F97316','#6366F1'];
+
+new Chart(document.getElementById('chartAngkatan'), {
+    type: 'bar',
+    data: {
+        labels: {{ per_angkatan | map(attribute='angkatan') | list | tojson }},
+        datasets: [{ label: 'Jumlah Alumni', data: {{ per_angkatan | map(attribute='jumlah') | list | tojson }}, backgroundColor: '#3B82F6', borderRadius: 6 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+new Chart(document.getElementById('chartJurusan'), {
+    type: 'doughnut',
+    data: {
+        labels: {{ per_jurusan | map(attribute='jurusan') | list | tojson }},
+        datasets: [{ data: {{ per_jurusan | map(attribute='jumlah') | list | tojson }}, backgroundColor: colors, borderWidth: 2 }]
+    },
+    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } } }
+});
+
+new Chart(document.getElementById('chartPekerjaan'), {
+    type: 'bar',
+    data: {
+        labels: {{ top_pekerjaan | map(attribute='pekerjaan') | list | tojson }},
+        datasets: [{ label: 'Jumlah', data: {{ top_pekerjaan | map(attribute='jumlah') | list | tojson }}, backgroundColor: '#8B5CF6', borderRadius: 6 }]
+    },
+    options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+new Chart(document.getElementById('chartKota'), {
+    type: 'bar',
+    data: {
+        labels: {{ top_kota | map(attribute='kota_domisili') | list | tojson }},
+        datasets: [{ label: 'Jumlah', data: {{ top_kota | map(attribute='jumlah') | list | tojson }}, backgroundColor: '#10B981', borderRadius: 6 }]
+    },
+    options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+</script>
+{% endblock %}

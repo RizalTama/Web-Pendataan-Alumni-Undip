@@ -1,0 +1,39 @@
+# Caddy jalan di HOST (systemd), bukan di dalam Docker.
+# Pasang ke /etc/caddy/Caddyfile lalu:
+#   sudo caddy validate --config /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#
+# Syarat sebelum reload: ikafibundip.com dan www.ikafibundip.com sudah mengarah
+# ke 103.89.2.238, dan port 80 terbuka (ACME/Let's Encrypt butuh itu).
+
+ikafibundip.com {
+	encode zstd gzip
+
+	reverse_proxy 127.0.0.1:5005
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# Sedikit di atas MAX_CONTENT_LENGTH aplikasi (5MB) supaya file kegedean
+	# ditolak oleh Flask dengan pesan yang jelas, bukan diputus Caddy duluan.
+	request_body {
+		max_size 6MB
+	}
+
+	log {
+		output file /var/log/caddy/ikafibundip.log {
+			roll_size 10MB
+			roll_keep 5
+		}
+	}
+}
+
+# www dialihkan ke domain utama, supaya tidak ada dua versi situs yang sama.
+# Kalau blok ini dihapus, hapus juga record A `www` di DNS.
+www.ikafibundip.com {
+	redir https://ikafibundip.com{uri} permanent
+}

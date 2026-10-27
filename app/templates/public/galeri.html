@@ -1,0 +1,102 @@
+{% extends 'public/base.html' %}
+{% block title %}Galeri — IKA FIB UNDIP{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Galeri Kegiatan</h1>
+            <p class="text-gray-500 mt-1">Momen berharga bersama alumni</p>
+        </div>
+        <p class="text-sm text-gray-400">{{ pagination.total }} foto</p>
+    </div>
+
+    {% if pagination.data %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+        {% for g in pagination.data %}
+        <div class="group relative aspect-square overflow-hidden rounded-xl bg-gray-100 cursor-pointer"
+             onclick="openLightbox('{{ url_for('static', filename='uploads/gallery/' + g.foto) }}', '{{ g.judul | e }}', '{{ (g.deskripsi or '') | e }}')">
+            <img src="{{ url_for('static', filename='uploads/gallery/' + g.foto) }}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ g.judul }}">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-end">
+                <div class="p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <p class="text-white font-semibold text-sm line-clamp-2">{{ g.judul }}</p>
+                    {% if g.tanggal_kegiatan %}
+                    <p class="text-gray-300 text-xs mt-0.5">{{ g.tanggal_kegiatan.strftime('%d %b %Y') if g.tanggal_kegiatan else '' }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.total_pages > 1 %}
+    <div class="flex justify-center gap-1">
+        {% if pagination.has_prev %}
+        <a href="?page={{ pagination.page - 1 }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">← Prev</a>
+        {% endif %}
+        {% for p in pagination.page_range %}
+        {% if p %}
+        <a href="?page={{ p }}"
+           class="px-4 py-2 text-sm border rounded-lg {% if p == pagination.page %}bg-blue-600 text-white border-blue-600{% else %}border-gray-300 hover:bg-gray-50{% endif %}">{{ p }}</a>
+        {% else %}
+        <span class="px-2 py-2 text-sm text-gray-400">…</span>
+        {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <a href="?page={{ pagination.page + 1 }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Next →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-16 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <p class="font-medium">Belum ada foto di galeri.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="fixed inset-0 bg-black/85 z-50 hidden items-center justify-center p-4" onclick="closeLightboxOnOverlay(event)">
+    <div class="relative max-w-4xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <img id="lightbox-img" src="" class="w-full max-h-[70vh] object-contain bg-gray-900" alt="">
+        <div class="p-5">
+            <h3 id="lightbox-title" class="font-bold text-gray-900 text-lg"></h3>
+            <p id="lightbox-desc" class="text-gray-500 text-sm mt-1"></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openLightbox(src, title, desc) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-title').textContent = title;
+    document.getElementById('lightbox-desc').textContent = desc;
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('hidden');
+    lb.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.add('hidden');
+    lb.classList.remove('flex');
+    document.body.style.overflow = '';
+}
+function closeLightboxOnOverlay(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+{% endblock %}
