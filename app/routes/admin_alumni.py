@@ -69,6 +69,10 @@ def tambah():
             flash('Nama, angkatan, dan jurusan wajib diisi.', 'danger')
             return render_template('admin/alumni/form.html', alumni=None)
 
+        if not angkatan.isdigit() or not (1950 <= int(angkatan) <= 2100):
+            flash('Angkatan harus berupa tahun antara 1950-2100.', 'danger')
+            return render_template('admin/alumni/form.html', alumni=None)
+
         pekerjaan = request.form.get('pekerjaan', '').strip()
         perusahaan = request.form.get('perusahaan', '').strip()
         kota_domisili = request.form.get('kota_domisili', '').strip()
@@ -119,6 +123,10 @@ def edit(id):
 
         if not nama or not angkatan or not jurusan:
             flash('Nama, angkatan, dan jurusan wajib diisi.', 'danger')
+            return render_template('admin/alumni/form.html', alumni=alumni)
+
+        if not angkatan.isdigit() or not (1950 <= int(angkatan) <= 2100):
+            flash('Angkatan harus berupa tahun antara 1950-2100.', 'danger')
             return render_template('admin/alumni/form.html', alumni=alumni)
 
         pekerjaan = request.form.get('pekerjaan', '').strip()
