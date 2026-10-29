@@ -13,3 +13,7 @@ data/
 # Dump berisi data pribadi 1966 alumni — kirim via scp, jangan di-commit.
 alumni_db.sql
 *.xlsx
+
+# macOS
+.DS_Store
+app/.DS_Store
